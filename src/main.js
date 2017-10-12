@@ -10,6 +10,9 @@ import $ from 'jquery'
 // Import the three.js library
 import * as THREE from 'three'
 
+// Import our special three.js cube that randomly rotates
+import RandoCube from './objects/RandoCube'
+
 // To run once after the DOM is fully loaded
 $(document).ready(() => {
   // Initialize the three.js scene
@@ -23,19 +26,21 @@ $(document).ready(() => {
 })
 
 // Variables used below
-let mesh, renderer, scene, camera
+let renderer, scene, camera
 let widgetWidth, widgetHeight, resizeNeeded
 
 // Initialize three.js geometry, scene, and renderer
 function initThree () {
-  // Build the cube mesh
-  let geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2)
-  let material = new THREE.MeshNormalMaterial()
-  mesh = new THREE.Mesh(geometry, material)
-
-  // Build the scene with the cube in it
+  // Build the scene with a bunch of randomly rotating cubes
   scene = new THREE.Scene()
-  scene.add(mesh)
+  for (let y = 0; y < 3; y++) {
+    for (let x = 0; x < 5; x++) {
+      let cube = new RandoCube(0.2)
+      cube.position.x = (x - 2) * 0.4
+      cube.position.y = (y - 1) * 0.4
+      scene.add(cube)
+    }
+  }
 
   // Make a renderer that will draw the scene
   renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -45,8 +50,8 @@ function initThree () {
 
   // Make a perspective projection camera for the scene
   let aspect = widgetWidth / widgetHeight
-  camera = new THREE.PerspectiveCamera(70, aspect, 0.01, 10)
-  camera.position.z = 1
+  camera = new THREE.PerspectiveCamera(35, aspect, 0.01, 10)
+  camera.position.z = 3
 
   // Call resize once so everything is syncronized
   resize()
@@ -76,15 +81,16 @@ function animate () {
   // Queue the next animation frame (continuously animates)
   requestAnimationFrame(animate)
 
-  // Check for needed resize
+  // Do a resize if it is needed
   if (resizeNeeded) {
-    resize()
     resizeNeeded = false
+    resize()
   }
 
-  // Rotate the cube
-  mesh.rotation.x += 0.01
-  mesh.rotation.y += 0.02
+  // Update each cube so it rotates
+  scene.children.forEach((box) => {
+    box.update()
+  })
 
   // Render the scene
   renderer.render(scene, camera)
