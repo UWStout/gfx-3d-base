@@ -1,12 +1,12 @@
-# UW Stout CS 343 2D Project Base
+# UW Stout CS 343 3D Project Base
 #### A codebase for building the projects assigned in CS 343, Mathematical Foundations of Computer Graphics, at the University of Wisconsin Stout.
 
 ## Features
-- ESLINT with JavaScript Standard Style configuration
+- ESLINT with JavaScript Standard Style configuration (updated to warnings instead of errors)
 - Latest generation of JavaScript "transpiled" to browser JS (ES5) (via [Babel](https://babeljs.io))
 - Browsers synchronize and hot-reload as you make changes (via [Browsersync](https://browsersync.io))
 - Module JavaScript that is re-targeted to a web browser env (via [webpack](https://webpack.js.org))
-- Packaging and loading of Bootstrap, jQuery, & nanoGL (via [webpack](https://webpack.js.org))
+- Packaging and loading of Bootstrap, jQuery, & Three.js (via [webpack](https://webpack.js.org))
 - Pre-configured 'deploy' target to minify and uglify your JavaScript
 
 # Setup
