@@ -8,90 +8,43 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import $ from 'jquery'
 
 // Import the three.js library
-import * as THREE from 'three'
+import Detector from 'three/examples/js/Detector'
 
-// Import our special three.js cube that randomly rotates
-import RandoCube from './objects/RandoCube'
+// Import helpers
+import MeshWidget from './helpers/MeshWidget'
+import Interface from './interface'
+import MeshFactory from './objects/MeshFactory'
+
+let widget = null
 
 // To run once after the DOM is fully loaded
 $(document).ready(() => {
-  // Initialize the three.js scene
-  initThree()
+  // Make sure WebGL is supported
+  if (!Detector.webgl) {
+    console.log('adding message')
+    Detector.addGetWebGLMessage({ parent: $('#GLWidget')[0] })
+    return
+  }
 
-  // Setup resize callback for the window
-  $(window).resize(checkResize)
+  // Initialize the widget
+  widget = new MeshWidget($('#GLWidget')[0], MeshWidget.ControlTypes.DYNAMIC_ORBIT)
 
-  // Start the animation
-  requestAnimationFrame(animate)
+  // Put all the event listeners in place
+  Interface.initialize()
+
+  // Widget should resize any time window resizes
+  window.addEventListener('resize', () => { widget.requestResize() }, false)
+
+  // Pass references to widget to other classes
+  Interface.widget = widget
+  MeshFactory.widget = widget
+
+  // Start the animation loop
+  animate()
 })
 
-// Variables used below
-let renderer, scene, camera
-let widgetWidth, widgetHeight, resizeNeeded
-
-// Initialize three.js geometry, scene, and renderer
-function initThree () {
-  // Build the scene with a bunch of randomly rotating cubes
-  scene = new THREE.Scene()
-  for (let y = 0; y < 3; y++) {
-    for (let x = 0; x < 5; x++) {
-      let cube = new RandoCube(0.2)
-      cube.position.x = (x - 2) * 0.4
-      cube.position.y = (y - 1) * 0.4
-      scene.add(cube)
-    }
-  }
-
-  // Make a renderer that will draw the scene
-  renderer = new THREE.WebGLRenderer({ antialias: true })
-  $('#GLWidget').append(renderer.domElement)
-  widgetWidth = $('#GLWidget').width()
-  widgetHeight = $('#GLWidget').height()
-
-  // Make a perspective projection camera for the scene
-  let aspect = widgetWidth / widgetHeight
-  camera = new THREE.PerspectiveCamera(35, aspect, 0.01, 10)
-  camera.position.z = 3
-
-  // Call resize once so everything is syncronized
-  resize()
-}
-
-// Compare widget dimensions and flag if they've changed
-function checkResize () {
-  if ($('#GLWidget').width() !== widgetWidth ||
-      $('#GLWidget').height() !== widgetHeight) {
-    resizeNeeded = true
-  }
-}
-
-// Syncronize the widget dimensions with the three.js renderer
-function resize () {
-  let container = $('#GLWidget')
-  camera.aspect = container.width() / container.height()
-  camera.updateProjectionMatrix()
-  renderer.setSize(container.width(), container.height())
-
-  widgetWidth = $('#GLWidget').width()
-  widgetHeight = $('#GLWidget').height()
-}
-
-// Render and animate the scene
+// Basic update/animate function (MeshWidget.render does all the work)
 function animate () {
-  // Queue the next animation frame (continuously animates)
+  widget.render()
   requestAnimationFrame(animate)
-
-  // Do a resize if it is needed
-  if (resizeNeeded) {
-    resizeNeeded = false
-    resize()
-  }
-
-  // Update each cube so it rotates
-  scene.children.forEach((box) => {
-    box.update()
-  })
-
-  // Render the scene
-  renderer.render(scene, camera)
 }
