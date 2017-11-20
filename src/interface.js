@@ -134,34 +134,40 @@ function advanceFrameEvent () {
 let animationPlaying = false
 let intervalID = -1
 function playPauseEvent () {
+  // Reverse 'animationPlaying' and adjust GUI and events
   animationPlaying = !animationPlaying
   if (animationPlaying) {
+    // Update the GUI widgets
     $('#animLoad').prop('disabled', true)
     $('#setKeyframeButton').prop('disabled', true)
     Interface.frameSlider.slider('disable')
-
     $('#playPauseButton').html('<span class="glyphicon glyphicon-pause"></span>')
+
+    // Create a new 'interval' to fire at the desired Frame Rate
     intervalID = setInterval(advanceFrameEvent, 1000 / config.TARGET_FPS)
   } else {
+    // Update the GUI widgets
     $('#animLoad').prop('disabled', false)
     $('#setKeyframeButton').prop('disabled', false)
     Interface.frameSlider.slider('enable')
-
     $('#playPauseButton').html('<span class="glyphicon glyphicon-play"></span>')
+
+    // Stop the 'interval' event
     clearInterval(intervalID)
+
+    // Update the selected mesh one last time
     updateCurrentlySelectedMesh()
   }
 }
 
 function setKeyFrameEvent () {
-  console.log('setKeyFrameEvent triggered')
+  // Retrieve the currently selected node
   let meshNode = $('#meshListTree').tree('getSelectedNode')
-
-  if (!meshNode) { return }
-  if (typeof meshNode !== 'undefined' && typeof meshNode !== 'undefined') {
+  if (meshNode && meshNode.meshObj) {
     // Get the current framenumber
     let frameNumber = Interface.frameSlider.slider('getValue')
 
+    // Set/Re-set/Delete key frame and syncronize the key frame button
     if (meshNode.meshObj.frameIsKeyFrame(frameNumber)) {
       if ($('#setKeyframeButton').hasClass('btn-danger')) {
         // Update currently set keyframe by saving over it
@@ -185,6 +191,7 @@ function setKeyFrameEvent () {
 }
 
 function updateCurrentlySelectedMesh () {
+  // Get the currently selected node and update it
   let meshNode = $('#meshListTree').tree('getSelectedNode')
   if (meshNode && meshNode.meshObj) {
     updateSelectedMesh(meshNode.meshObj)
@@ -193,7 +200,9 @@ function updateCurrentlySelectedMesh () {
 
 // Update the GUI form values to match the mesh element that was just selected
 function updateSelectedMesh (meshObj) {
+  // Default the key frame button to disabled
   $('#setKeyframeButton').prop('disabled', true)
+
   if (meshObj) {
     // Copy transformation properties into the GUI
     $('#xTranslate').val(sanitizeValue(meshObj.transform._position.x, 0))
