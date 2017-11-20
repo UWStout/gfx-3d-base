@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>CS 343: Project 3 - Modeling School</title>
+    <title>CS 343: Project 4 - Animatrix</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -14,7 +14,7 @@
   <div class="container">
 
     <div class="page-header">
-        <h1>Project 3 - Modeling School // CS 343, UW Stout</h1>
+        <h1>Project 4 - Animatrix // CS 343, UW Stout</h1>
     </div>
 
     <div class="row">
@@ -28,24 +28,21 @@
 
         <!-- Controls that appear under the rendering window -->
         <div class="form-inline">
-          <!-- Change the Rendering Mode -->
-          <label for="renderingMode">Rendering Mode:</label>
-          <select class="form-control" id="renderingMode">
-            <option value="Default">Default</option>
-            <option value="Wire1">Wireframe + Default</option>
-            <option value="Wire2">Wireframe Only</option>
-            <option disabled>──────────</option>
-            <option value="NormalDebug">Normals as Colors</option>
-          </select>
-          &nbsp;&nbsp;&nbsp;&nbsp;
+          <!-- Current Frame indicator -->
+          <input id="frameSlider" type="text" style="width: 70%;" />
 
-          <!-- Built-in ways to manipulate the surface normals -->
-          <label class="control-label" for="smoothNormals">Normals:</label>
-          <button class="btn btn-default" id="smoothNormals" type="button">Smooth</button>
-          <button class="btn btn-default" id="faceNormals" type="button">Per-Face</button>
+          <span>&nbsp;&nbsp;&nbsp;</span>
 
-          <!-- Reset the orientation, scale and translation of the view -->
-          <button class="btn btn-default pull-right" id="resetViewButton" type="button">Reset View</button>
+          <!-- Play/Pause Button -->
+          <button class="btn btn-default" id="playPauseButton" type="button"><span class="glyphicon glyphicon-play"></span></button>
+
+          <!-- Save Keyframe Button -->
+          <button class="btn btn-default" id="setKeyframeButton" type="button" disabled>&#128273;</button>
+
+          <span class="pull-right">
+            <!-- Reset view Button -->
+            <button class="btn btn-default" id="resetViewButton" type="button">Reset View</button>
+          </span>
         </div>
 
       </div>
@@ -54,21 +51,12 @@
       <div class="col-md-3">
 
         <!-- Load a new Shape -->
-        <label for="shapeLoad">Load a Shape</label>
-        <select class="form-control" id="shapeLoad" style="width:100%;">
-          <option value="select">Select a model to load ...</option>
+        <label for="animLoad">Load an Animation</label>
+        <select class="form-control" id="animLoad" style="width:100%;">
+          <option value="select">Select animation to load ...</option>
           <option disabled>──────────</option>
-          <option value="Cube">Cube Example</option>
-          <option value="Cylinder">Cylinder</option>
-          <option value="Sphere">Sphere</option>
-          <option disabled>──────────</option>
-          <option value="Humanoid">Humanoid Skeleton</option>
-          <option value="Bell">Bell Sculpture</option>
-          <option disabled>──────────</option>
-          <option value="Extra1">Extra Credit 1</option>
-          <option value="Extra2">Extra Credit 2</option>
-          <option disabled>──────────</option>
-          <option value="Cube">Load OBJ from File</option>
+          <option value="HumanoidWalk">Humanoid Walk Animation</option>
+          <option value="HumanoidOther">Humanoid Other Animation</option>
         </select>
 
         <br />
@@ -82,12 +70,12 @@
         <!-- Controls for transformation -->
         <label>Transformation</label>
         <div class="form-group rounded-border">
-          <fieldset id="transformSet" disabled>
+          <fieldset id="transformSet">
             <label for="xTranslate" class="control-label">Translation:</label><br>
             <div class="form-inline">
-              <input type="number" class="form-control shape-trans-control" value="0.0" step="1.0" min="-9999" max="9999" name="xTranslate" id="xTranslate">
-              <input type="number" class="form-control shape-trans-control" value="0.0" step="1.0" min="-9999" max="9999" name="yTranslate" id="yTranslate">
-              <input type="number" class="form-control shape-trans-control" value="0.0" step="1.0" min="-9999" max="9999" name="zTranslate" id="zTranslate">
+              <input type="number" class="form-control shape-trans-control" value="0.0" step="0.1" min="-9999" max="9999" name="xTranslate" id="xTranslate">
+              <input type="number" class="form-control shape-trans-control" value="0.0" step="0.1" min="-9999" max="9999" name="yTranslate" id="yTranslate">
+              <input type="number" class="form-control shape-trans-control" value="0.0" step="0.1" min="-9999" max="9999" name="zTranslate" id="zTranslate">
             </div>
 
             <hr style="margin:10px 0">
@@ -112,175 +100,12 @@
 
             <label for="xScale" class="control-label">Rotation Angles:</label>
             <div class="form-inline">
-              <input type="number" class="form-control shape-trans-control" value="0.0" step="1.0" min="-180" max="180" name="xAngle" id="xAngle">
-              <input type="number" class="form-control shape-trans-control" value="0.0" step="1.0" min="-180" max="180" name="yAngle" id="yAngle">
-              <input type="number" class="form-control shape-trans-control" value="0.0" step="1.0" min="-180" max="180" name="zAngle" id="zAngle">
+              <input type="number" class="form-control shape-trans-control" value="0.0" step="1.0" min="-1080" max="1080" name="xAngle" id="xAngle">
+              <input type="number" class="form-control shape-trans-control" value="0.0" step="1.0" min="-1080" max="1080" name="yAngle" id="yAngle">
+              <input type="number" class="form-control shape-trans-control" value="0.0" step="1.0" min="-1080" max="1080" name="zAngle" id="zAngle">
             </div>
 
           </fieldset>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Cylinder Geometry Modal dialog -->
-  <div id="createCylinderModal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-sm">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Create Cylinder Geometry</h4>
-        </div>
-
-        <div class="modal-body">
-          <div class="form-inline">
-            <label>Slices: <input type="number" class="form-control" min="3" max="9999" value="36" id="cylinderSlices"></label>
-          </div>
-          <span class="help-block">Subdivisions around the outside</span>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-          <button type="button" id="createCylinder" class="btn btn-default pull-right" data-dismiss="modal">Create Cylinder</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Sphere Geometry Modal dialog -->
-  <div id="createSphereModal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-sm">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Create Sphere Geometry</h4>
-        </div>
-
-        <div class="modal-body">
-          <div class="form-inline">
-            <label>Slices: <input type="number" class="form-control" min="3" max="9999" value="36" id="sphereSlices"></label>
-          </div>
-          <span class="help-block">Subdivisions around the equator</span>
-
-          <div class="form-inline">
-            <label>Stacks: <input type="number" class="form-control" min="3" max="9999" value="18" id="sphereStacks"></label>
-          </div>
-          <span class="help-block">Subdivisions between the poles</span>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-          <button type="button" id="createSphere" class="btn btn-default pull-right" data-dismiss="modal">Create Sphere</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Extra Credit 1 Modal dialog -->
-  <div id="createEC1Modal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-sm">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Extra Credit 1 Geometry</h4>
-        </div>
-
-        <div class="modal-body">
-          <div class="form-inline">
-            <label>Parameter 1: <input type="number" class="form-control" min="3" max="9999" value="10" id="ec1Param1"></label>
-          </div>
-          <span class="help-block">The first subdivision variable</span>
-
-          <div class="form-inline">
-            <label>Parameter 2: <input type="number" class="form-control" min="3" max="9999" value="10" id="ec1Param2"></label>
-          </div>
-          <span class="help-block">The second subdivision variable</span>
-
-          <div class="form-inline">
-            <label>Parameter 3: <input type="number" class="form-control" min="3" max="9999" value="10" id="ec1Param3"></label>
-          </div>
-          <span class="help-block">The third subdivision variable</span>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-          <button type="button" id="createEC1" class="btn btn-default pull-right" data-dismiss="modal">Create Extra Credit 1</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Extra Credit 2 Modal dialog -->
-  <div id="createEC2Modal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-sm">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Extra Credit 2 Geometry</h4>
-        </div>
-
-        <div class="modal-body">
-          <div class="form-inline">
-            <label>Parameter 1: <input type="number" class="form-control" min="3" max="9999" value="10" id="ec2Param1"></label>
-          </div>
-          <span class="help-block">The first subdivision variable</span>
-
-          <div class="form-inline">
-            <label>Parameter 2: <input type="number" class="form-control" min="3" max="9999" value="10" id="ec2Param2"></label>
-          </div>
-          <span class="help-block">The second subdivision variable</span>
-
-          <div class="form-inline">
-            <label>Parameter 3: <input type="number" class="form-control" min="3" max="9999" value="10" id="ec2Param3"></label>
-          </div>
-          <span class="help-block">The third subdivision variable</span>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-          <button type="button" id="createEC2" class="btn btn-default pull-right" data-dismiss="modal">Create Extra Credit 2</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Load from OBJ Modal dialog -->
-  <div id="objLoadModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Load from OBJ file</h4>
-        </div>
-        <div class="modal-body">
-          <div class="input-group">
-            <label class="input-group-btn">
-              <span class="btn btn-primary">
-                Browse&hellip; <input type="file" style="display: none;" id="objFile">
-              </span>
-            </label>
-            <input type="text" class="form-control" readonly>
-          </div>
-          <span class="help-block">Select a local OBJ file to upload and view.</span>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-          <button type="button" id="objLoadButton" class="btn btn-default pull-right" data-dismiss="modal">Load File</button>
         </div>
       </div>
 

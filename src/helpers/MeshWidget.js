@@ -3,7 +3,10 @@ import * as THREE from 'three'
 import 'three/examples/js/controls/OrbitControls'
 import 'three/examples/js/controls/TrackballControls'
 
+import AnimatableMesh from './AnimatableMesh'
+
 import Interface from '../interface'
+import config from '../config'
 
 // Utility function for shadow-mapped lights
 import { makeShadowedLight } from '../utils'
@@ -46,6 +49,8 @@ class MeshWidget {
     // Request a rebuild of the entire scene
     this._rebuildRequested = true
     this._resizeRequested = true
+    this._updateRequested = true
+    this._updateToFrame = 0
 
     // Initialize the widget
     this.initialize()
@@ -313,6 +318,29 @@ class MeshWidget {
     }
   }
 
+  updateMeshFrame (frameNumber) {
+    if (frameNumber >= 0 && frameNumber <= config.MAX_FRAMES) {
+      this._updateToFrame = frameNumber
+      this.updateMesh()
+    }
+  }
+
+  updateMesh () {
+    console.info('Updating mesh')
+    if (this._solidMesh != null) {
+      this._solidMesh.traverse((object) => {
+        if (object instanceof AnimatableMesh) {
+          object.loadFrame(this._updateToFrame)
+        }
+      })
+    }
+  }
+
+  requestMeshUpdate (frameNumber) {
+    this._updateToFrame = Math.max(0, Math.min(config.MAX_FRAMES, frameNumber || 0))
+    this._updateRequested = true
+  }
+
   requestResize () {
     this._resizeRequested = true
   }
@@ -364,6 +392,12 @@ class MeshWidget {
     if (this._rebuildRequested) {
       this.rebuildScene()
       this._rebuildRequested = false
+    }
+
+    // Check if a mesh update was requested
+    if (this._updateRequested) {
+      this.updateMesh()
+      this._updateRequested = false
     }
 
     // Re-render the scene

@@ -4,6 +4,9 @@ import * as THREE from 'three'
 // Parent class
 import MeshFactory from './MeshFactory'
 
+// TODO: If you use this in your humanoid, then copy over your version
+// from project 3. If you do not use it, then delete it!
+
 /**
  * A class to build sphere meshes for use with Three.js
  **/
@@ -49,12 +52,6 @@ class SphereFactory extends MeshFactory {
   makeObjectGeometry () {
     // A fresh, empty Geometry object that will hold the mesh geometry
     var cylGeom = new THREE.Geometry()
-
-    // TODO: Create a unit sphere using this._slices and this._stacks for sampling the dimensions.
-    //   - The south pole should be at Y=-1 and the north pole at Y=1 thhe radius should be 1.
-    //   - See buildUnitCube() for an example of how to use the Geometry object to do this.
-    //   - You should have a single THREE.Geometry() for your sphere that you return.
-    //   - Your vertices must wind counter-clockwise and normals must point outwards.
 
     // Return finished geometry
     return cylGeom

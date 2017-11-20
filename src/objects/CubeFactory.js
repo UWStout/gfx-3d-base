@@ -4,6 +4,9 @@ import * as THREE from 'three'
 // Parent class
 import MeshFactory from './MeshFactory'
 
+// TODO: If you do NOT use this in your humanoid then delete it!
+// Otherwise, just delete this comment (it already works).
+
 /**
  * A class to build cube meshes for use with Three.js
  **/

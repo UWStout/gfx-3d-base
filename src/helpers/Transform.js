@@ -64,8 +64,7 @@ class Transform {
    */
   setPosition (x, y, z) {
     this._position.set(x, y, z)
-    this._meshObj.matrix = this.rebuildMatrix()
-    this._meshObj.matrixWorldNeedsUpdate = true
+    this.apply()
   }
 
   /**
@@ -76,8 +75,7 @@ class Transform {
    */
   setRotation (x, y, z) {
     this._rotation.set(x, y, z)
-    this._meshObj.matrix = this.rebuildMatrix()
-    this._meshObj.matrixWorldNeedsUpdate = true
+    this.apply()
   }
 
   /**
@@ -88,8 +86,7 @@ class Transform {
    */
   setScale (x, y, z) {
     this._scale.set(x, y, z)
-    this._meshObj.matrix = this.rebuildMatrix()
-    this._meshObj.matrixWorldNeedsUpdate = true
+    this.apply()
   }
 
   /**
@@ -100,6 +97,14 @@ class Transform {
    */
   setPivot (x, y, z) {
     this._pivotPoint.set(x, y, z)
+    this.apply()
+  }
+
+  /**
+   * Apply this transformation's values to the parent mesh object
+   * @this The transform object for ths function.
+   */
+  apply () {
     this._meshObj.matrix = this.rebuildMatrix()
     this._meshObj.matrixWorldNeedsUpdate = true
   }
@@ -109,36 +114,9 @@ class Transform {
    * @return {THREE.Matrix4} The 3d matrix that achieves this transformation
    */
   rebuildMatrix () {
-    // TODO: Build and RETURN a matrix that combines scale, translation
-    // and rotation about a point.
+    // TODO: BCopy your code from project 3 here
 
-    // The algorithm for this funciton should follow these steps:
-    // 1) Build translation FROM this._pivotPoint (negative)
-    // 2) Build three rotations around Z, Y, and X
-    //  - This requires three separate matrices
-    //  - Use this._rotation for the proper angles (in radians)
-    // 3) Build translation TO this._pivotPoint (positive)
-    // 4) Build translation for this._position
-
-    // 5) Combine the rotations using Matrix4.multiply or Matrix4.multiplyMatrices
-    // Must be combined in this order, left to right:
-    //   - Scale
-    //   - Translate from pivot point
-    //   - Rotate around Z
-    //   - Rotate around Y
-    //   - Rotate around X
-    //   - Translate to pivot point
-    //   - Translation
-
-    // EXAMPLE: Here is how you make the scale matrix
-    var S = new THREE.Matrix4().makeScale(
-      this._scale.x, this._scale.y, this._scale.z)
-
-    // EXAMPLE: Here is one way to multiply matrices together
-    var M = new THREE.Matrix4().multiplyMatrices(S, S)
-
-    // NOTE: you can also call A.multiply(B) where A and B are both THREE.Matrix4
-    // objects. The result is stored back in A like this: A = A x B
+    let M = new THREE.Matrix4()
 
     // Be sure to return the final combined matrix
     return M
