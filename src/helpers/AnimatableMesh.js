@@ -94,13 +94,13 @@ class AnimatableMesh extends THREE.Mesh {
     }
 
     var next = frameNumber + 1
-    while (next < this.keyframes.size) {
+    while (next <= config.MAX_FRAMES) {
       if (this.keyframes.has(next)) { break }
       next++
     }
 
     // Check what we found and interpolate
-    if (prev < 0 && next >= this.keyframes.size) {
+    if (prev < 0 && next > config.MAX_FRAMES) {
       // Apparently no keyframes exist yet
       this.transform.apply()
       this.loadedFrame = -1
@@ -111,7 +111,7 @@ class AnimatableMesh extends THREE.Mesh {
         this.transform.apply()
         this.loadedFrame = next
       }
-    } else if (next >= this.keyframes.size) {
+    } else if (next > config.MAX_FRAMES) {
       // There is no next keyframe
       if (this.loadedFrame !== prev) {
         this.transform = this.keyframes.get(prev)
